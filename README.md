@@ -4,7 +4,7 @@ Bluesky bot to update USD to BRL conversion in each five minutes
 ## .env file
 .env file should look like this:
 
-```
+```markdown
 VALIDATE_HOUR=
 EXECUTION_TIME_MS=
 BLUESKY_USERNAME=
