@@ -5,6 +5,7 @@ const URL = "https://economia.awesomeapi.com.br/json/last/USD-BRL";
 const BIDS_FILE_NAME = "bids.txt";
 const CHARACTER_FORMAT = "utf8";
 const BREAK_LINE = "\n";
+const FRACTION_DIGITS = 2;
 
 async function execute() {
     const shouldValidateHour = process.env.VALIDATE_HOUR === "true";
@@ -36,13 +37,30 @@ async function execute() {
             fs.appendFileSync(BIDS_FILE_NAME, `${today}`)
         }
 
-        fs.appendFileSync(BIDS_FILE_NAME, `${BREAK_LINE}${data.USDBRL.bid}`)
-
+        const text = getText(data.USDBRL.bid);
+        console.log(text);
+        fs.appendFileSync(BIDS_FILE_NAME, `${BREAK_LINE}${roundTo2FractionDigits(data.USDBRL.bid)}`)
     } else {
         console.log(`Error to get data - ${response.status}`);
     }
 
     setTimeout(execute, TIME_EXECUTION);
+}
+
+function getText(currentBid) {
+    const formatedBid = formatAsCurrency(currentBid);
+    return `No momento, 1 dólar custa ${formatedBid} reais`;
+}
+
+function formatAsCurrency(bid) {
+    return Number(bid).toLocaleString('pt-br', {
+        minimumFractionDigits: FRACTION_DIGITS,
+        maximumFractionDigits: FRACTION_DIGITS
+    });
+}
+
+function roundTo2FractionDigits(bid) {
+    return Number(bid).toFixed(2);
 }
 
 execute();
