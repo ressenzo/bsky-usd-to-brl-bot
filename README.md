@@ -13,6 +13,6 @@ BLUESKY_PASSWORD=
 ```
 
 - `VALIDATE_HOUR`: boolean value to set if application should check hour for execution
-- `EXECUTION_TIME_MS`: integer value to set execution interva`
+- `EXECUTION_TIME_MS`: integer value to set execution interval
 - `BLUESKY_USERNAM`: string value for bluesky username
 - `BLUESKY_PASSWOR`: string value for bluesky password
