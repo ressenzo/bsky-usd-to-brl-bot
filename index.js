@@ -1,11 +1,21 @@
 import fs from 'fs';
+import { AtpAgent } from "@atproto/api";
 
 const TIME_EXECUTION = process.env.EXECUTION_TIME_MS;
 const URL = "https://economia.awesomeapi.com.br/json/last/USD-BRL";
 const BIDS_FILE_NAME = "bids.txt";
 const CHARACTER_FORMAT = "utf8";
 const BREAK_LINE = "\n";
-const FRACTION_DIGITS = 2;
+const FRACTION_DIGITS = 3;
+
+const agent = new AtpAgent({
+    service: "https://bsky.social"
+});
+
+await agent.login({
+    identifier: process.env.BLUESKY_USERNAME,
+    password: process.env.BLUESKY_PASSWORD
+});
 
 async function execute() {
     const shouldValidateHour = process.env.VALIDATE_HOUR === "true";
@@ -38,6 +48,9 @@ async function execute() {
         }
 
         const text = getText(data.USDBRL.bid);
+        await agent.post({
+            text: text
+        });
         console.log(text);
         fs.appendFileSync(BIDS_FILE_NAME, `${BREAK_LINE}${roundTo2FractionDigits(data.USDBRL.bid)}`)
     } else {
@@ -60,7 +73,7 @@ function formatAsCurrency(bid) {
 }
 
 function roundTo2FractionDigits(bid) {
-    return Number(bid).toFixed(2);
+    return Number(bid).toFixed(FRACTION_DIGITS);    
 }
 
 execute();
